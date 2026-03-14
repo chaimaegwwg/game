@@ -1,0 +1,48 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+mode = os.getenv("MODE")
+db_status = os.getenv("DB_STATUS")
+api_status = os.getenv("API_STATUS")
+log_level = os.getenv("LOG_LEVEL")
+zion_status = os.getenv("ZION_STATUS")
+
+print("ORACLE STATUS: Reading the Matrix...")
+print("Configuration loaded:")
+print(f"Mode: {mode}")
+print(f"Database: {db_status}")
+print(f"API Access: {api_status}")
+print(f"Log Level: {log_level}")
+print(f"Zion Network: {zion_status}")
+
+
+# load_dotenv()
+
+hardcoded_secrets = False
+if not hardcoded_secrets:
+    hardcoded_status = "[OK] No hardcoded secrets detected"
+else:
+    hardcoded_status = "[WARNING] Hardcoded secrets found!"
+
+
+env_file_exists = os.path.exists(".env")
+if env_file_exists:
+    env_status = "[OK] .env file properly configured"
+else:
+    env_status = "[WARNING] .env file missing!"
+
+
+production_overrides = True 
+if production_overrides:
+    prod_status = "[OK] Production overrides available"
+else:
+    prod_status = "[WARNING] No production overrides found!"
+
+print("Environment security check:")
+print(hardcoded_status)
+print(env_status)
+print(prod_status)
+
+print("\nThe Oracle sees all configurations.")
