@@ -1,0 +1,134 @@
+from curses import wrapper
+import curses
+import sys
+import random 
+from time import sleep
+import time 
+# problem that i see first i thing that i solve it the food same time i don't see 
+# the final mission i thing is when the snake eat it toll
+class Snake:
+    def control_snake(self, stdscr):
+        character = "🐉"
+        # character = "🐀"
+        food = "🍥"
+        curses.curs_set(0)
+        height, width = stdscr.getmaxyx()
+        row = width // 2
+        col = height // 2
+        stdscr.addstr(col, row, character)
+        food_hieght = random.randint(1, height -1)
+        food_width = random.randint(1, width - 1)
+        stdscr.addstr(food_hieght, food_width, food)
+        stdscr.border()
+        check_col = 0
+        check_row = 0
+        stdscr.nodelay(True)
+        while True:
+            height_new, width_new = stdscr.getmaxyx()
+            if height != height_new or width != width_new:
+                stdscr.clear()
+                height = height_new
+                width = width_new
+                row = width // 2
+                col = height // 2
+
+                stdscr.addstr(col, row, character)
+                food_hieght = random.randint(0, height -1)
+                food_width = random.randint(0, width - 1)
+                stdscr.addstr(food_hieght, food_width, food)
+                # stdscr.addstr(5,5, f"height : {height} width : {width}")
+                stdscr.refresh()
+
+            stdscr.border()
+            try:    
+                key = stdscr.getkey()
+            except:
+                key =None
+            if col == food_hieght and row == food_width:
+                stdscr.erase()
+                food_hieght = random.randint(2, height -3)
+                food_width = random.randint(1, width - 3)
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.refresh()
+            elif key == "KEY_UP" and col != 0:
+                stdscr.erase()
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.addstr(col, row, character)
+                check_row = 0
+                check_col = -1    
+                stdscr.refresh()
+            elif col == food_hieght and row == food_width:
+                food_hieght = random.randint(1, height -1)
+                food_width = random.randint(1, width - 1)
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.refresh()
+            elif key == "KEY_DOWN" and col +1!= height:
+                stdscr.erase()
+                # col += 1
+                check_row = 0
+                check_col = 1
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.addstr(col, row, character)
+            elif col == food_hieght and row == food_width :
+                food_hieght = random.randint(1, height -1)
+                food_width = random.randint(1, width - 1)
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.refresh()
+            elif key == "KEY_RIGHT" and row + 1!= width -1:
+                stdscr.erase()
+
+                check_col = 0
+                check_row = 1
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.addstr(col, row, character)
+            elif col == food_hieght and row == food_width:
+                food_hieght = random.randint(1, height -1)
+                food_width = random.randint(1, width - 1)
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.refresh()
+            elif key == "KEY_LEFT" and row != 0:
+                stdscr.erase()
+                # row -= 1
+                check_col = 0
+                check_row = -1
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.addstr(col, row, character)
+            if key == None:
+
+                col += check_col
+                row += check_row
+                stdscr.erase()
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.addstr(col, row , character)
+                time.sleep(0.1)
+            if key == "q" or col + 1 == height or col == 0 or row+1 == width - 1 or row == 0:
+                sys.exit()
+                stdscr.erase()
+                stdscr.getch()
+                stdscr.refresh()
+
+            
+                
+
+#replace clear with erase
+#curs_set
+snake = Snake()
+curses.wrapper(snake.control_snake)
+
+
+
+
+    # def control_snake(self, stdscr):
+    #     stdscr.clear()
+    #     stdscr.addstr(0,0, "hello world")
+    #     stdscr.refresh()
+    #     key = stdscr.getkey()
+
+    #     stdscr.addstr(5,5, key)
+
+    #     stdscr.refresh()
+
+    #     stdscr.getch()
+    #origine hiegh 21 and the width 160
+    #157, 10 , 160, 
+    # width:158 ,height 10
