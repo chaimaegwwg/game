@@ -38,58 +38,56 @@ def display_snow(stdscr):
     keys = list(snow.keys())  
     positions = snow_distrubuition(height,width, keys)
     frozen = set()
-    check = 0
     #this is amjenane haja 
     # stdscr.timeout(100) 
     start = time.time()
-    while True:
-        current = time.time()
-        key = stdscr.getch()
-        if key == ord("q"):
-            break
-        height, width = stdscr.getmaxyx()
-        if current - start > 0.1:
-            # key = stdscr.getch()
-            # if key == ord("q"):
-            #     break
-            
-            height, width = stdscr.getmaxyx()
-            
-            stdscr.clear()
-            # a = time.time()
-            # if a - last_update >= 0.05:
-            for index, (x,y) in enumerate(positions):
-                # stdscr.clear()
-                if x < height - 2:
-                    if (x+1, y) in frozen:
+    change_cood = 0
+    try:
+        while True:
+            current = time.time()
+            key = stdscr.getch()
+            if key == ord("q"):
+                break
+            new_height, new_width = stdscr.getmaxyx()
+            if new_height != height or new_width != width:
+                change_cood = 1
+            if current - start > 0.1:
+                stdscr.erase()
+                for index, (x,y) in enumerate(positions):
+                    if x < height - 2:
+                        if (x+1, y) in frozen:
+                            frozen.add((x,y))
+                            x = random.randint(0,1)
+                            y = random.randint(0, width-1)
+
+                        else:
+                            x +=1
+                            y += random.choice([-1,0,1])
+                    else:
                         frozen.add((x,y))
                         x = random.randint(0,1)
                         y = random.randint(0, width-1)
+                        # y += random.choice([-1,0,1])
+                    positions[index] = (x, y)
 
-                    else:
-                        x +=1
-                        y += random.choice([-1,0,1])
-                else:
-                    frozen.add((x,y))
-                    x = random.randint(0,1)
-                    y = random.randint(0, width-1)
-                    # y += random.choice([-1,0,1])
-                positions[index] = (x, y)
+                if new_height != height or new_width != width or change_cood == 1:
+                    frozen.clear()
+                    height = new_height
+                    width = new_width
+                    change_cood = 0
 
-            for x,y in positions:
-                if 0 <= x < height and 0 <= y < width:
-                    stdscr.addch(x, y, "*")
 
-            for x,y in frozen:
-                if 0 <= x < height and 0 <= y < width:
-                    stdscr.addch(x, y, "*")
-            start = current
-            stdscr.refresh()
-        # stdscr.refresh()
-        # if current - start > 5:
-            # time.sleep(0.1)
-            # stdscr.timeout(100) 
-            
+                for x,y in positions:
+                    if 0 <= x < height and 0 <= y < width:
+                        stdscr.addch(x, y, "*")
+
+                for x,y in frozen:
+                    if 0 <= x < height and 0 <= y < width:
+                        stdscr.addch(x, y, "*")
+                start = current
+                stdscr.refresh()
+    except KeyboardInterrupt:
+        pass
 
     stdscr.getch()
    
@@ -98,112 +96,3 @@ curses.wrapper(display_snow)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import curses 
-# from curses import wrapper 
-# import random
-# import time
-# #the function factory i didin't used now but i do it on the first for test and i don't want to remove it now 
-# def factory(height, width):
-#     lst = {}
-    
-#     for x in range(width):
-#         if random.random() < 0.3:
-#             lst[x] = " "
-#         if random.random() < 0.2:
-#             lst[x] = "+"
-#         else:
-#             lst[x] = "*"
-
-#     return lst
-
-# def snow_distrubuition(height,width, keys):
-#     lst = []
-#     # sys = ["*","+"]
-#     c = [0 ,1]
-#     for x in range(9):
-#         col = random.randint(0, width-1)
-#         row = random.choice(c)
-#         # sym = random.choice(sys) 
-#         lst.append((row,col))
-#     return lst
-
-# def display_snow(stdscr):
-#     try:
-#         curses.curs_set(0)
-#     except:
-#         pass
-#     stdscr.nodelay(True)
-#     height, width = stdscr.getmaxyx()
-#     snow = factory(height, width)
-#     keys = list(snow.keys())  
-#     positions = snow_distrubuition(height,width, keys)
-#     frozen = set()
-#     check = 0
-#     # start = time.time()
-#     while True: 
-#         stdscr.erase()
-#         key = stdscr.getch()
-#         if key == ord("q"):
-#             break
-#         height, width = stdscr.getmaxyx()
-
-#         for index, (x,y) in enumerate(positions):
-#             # stdscr.clear()
-#             if x < height - 2:
-#                 if (x+1, y) in frozen:
-#                     frozen.add((x,y))
-#                     x = random.randint(0,1)
-#                     y = random.randint(0, width-1)
-                    
-#                 else:
-#                     x +=1
-#                     y += random.choice([-1,0,1])
-#             else:
-#                 frozen.add((x,y))
-#                 x = random.randint(0,1)
-#                 y = random.randint(0, width-1)
-#                 # y += random.choice([-1,0,1])
-#             positions[index] = (x, y)
-#         for x,y in positions:
-#             if 0 <= x < height and 0 <= y < width:
-#                 stdscr.addch(x, y, "*")
-
-#         for x,y in frozen:
-#             if 0 <= x < height and 0 <= y < width:
-#                 stdscr.addch(x, y, "*")
-#         # stdscr.refresh()
-        
-#         # current = time.time()
-#         # if current - start > 1:
-#         stdscr.refresh()
-#         # stdscr.timeout(60) 
-#         time.sleep(0.1)
-            
-
-#     stdscr.getch()
-   
-
-# curses.wrapper(display_snow)
