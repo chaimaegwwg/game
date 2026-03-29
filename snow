@@ -39,46 +39,56 @@ def display_snow(stdscr):
     positions = snow_distrubuition(height,width, keys)
     frozen = set()
     check = 0
+    #this is amjenane haja 
+    # stdscr.timeout(100) 
     start = time.time()
-    while True: 
+    while True:
+        current = time.time()
         key = stdscr.getch()
         if key == ord("q"):
             break
         height, width = stdscr.getmaxyx()
+        if current - start > 0.1:
+            # key = stdscr.getch()
+            # if key == ord("q"):
+            #     break
+            
+            height, width = stdscr.getmaxyx()
+            
+            stdscr.clear()
+            # a = time.time()
+            # if a - last_update >= 0.05:
+            for index, (x,y) in enumerate(positions):
+                # stdscr.clear()
+                if x < height - 2:
+                    if (x+1, y) in frozen:
+                        frozen.add((x,y))
+                        x = random.randint(0,1)
+                        y = random.randint(0, width-1)
 
-        stdscr.clear()
-        # a = time.time()
-        # if a - last_update >= 0.05:
-        for index, (x,y) in enumerate(positions):
-            # stdscr.clear()
-            if x < height - 2:
-                if (x+1, y) in frozen:
+                    else:
+                        x +=1
+                        y += random.choice([-1,0,1])
+                else:
                     frozen.add((x,y))
                     x = random.randint(0,1)
                     y = random.randint(0, width-1)
-                    
-                else:
-                    x +=1
-                    y += random.choice([-1,0,1])
-            else:
-                frozen.add((x,y))
-                x = random.randint(0,1)
-                y = random.randint(0, width-1)
-                # y += random.choice([-1,0,1])
-            positions[index] = (x, y)
+                    # y += random.choice([-1,0,1])
+                positions[index] = (x, y)
 
-        for x,y in positions:
-            if 0 <= x < height and 0 <= y < width:
-                stdscr.addch(x, y, "*")
+            for x,y in positions:
+                if 0 <= x < height and 0 <= y < width:
+                    stdscr.addch(x, y, "*")
 
-        for x,y in frozen:
-            if 0 <= x < height and 0 <= y < width:
-                stdscr.addch(x, y, "*")
-        # stdscr.refresh()
-        current = time.time()
-        if current - start > 1:
+            for x,y in frozen:
+                if 0 <= x < height and 0 <= y < width:
+                    stdscr.addch(x, y, "*")
+            start = current
             stdscr.refresh()
-            stdscr.timeout(100) 
+        # stdscr.refresh()
+        # if current - start > 5:
+            # time.sleep(0.1)
+            # stdscr.timeout(100) 
             
 
     stdscr.getch()
