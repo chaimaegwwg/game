@@ -1,0 +1,70 @@
+from curses import wrapper
+import curses
+import sys
+import random 
+from time import sleep
+import time 
+# problem that i see first i thing that i solve it the food same time i don't see 
+# the final mission i thing is when the snake eat it toll
+class Snake:
+    def control_snake(self, stdscr):
+        character = "🐉"
+        # character = "🐀"
+        food = "🍥"
+        curses.curs_set(0)
+        height, width = stdscr.getmaxyx()
+        row = width // 2
+        col = height // 2
+        stdscr.addstr(col, row, character)
+        food_hieght = random.randint(1, height -1)
+        food_width = random.randint(1, width - 1)
+        stdscr.addstr(food_hieght, food_width, food)
+        stdscr.border()
+        check_col = 0
+        check_row = 0
+        lst = []
+        stdscr.nodelay(True)
+        while True:
+            stdscr.erase()
+            stdscr.border()
+            try:    
+                key = stdscr.getkey()
+            except :
+                key =None
+                # pass
+            try:
+                if key == "KEY_UP" and col != 0:
+                    check_row = 0
+                    check_col = -1
+                elif key == "KEY_DOWN" and col +1!= height:
+                    check_row = 0
+                    check_col = 1
+                elif key == "KEY_RIGHT" and row + 1!= width -1:
+                    check_col = 0
+                    check_row = 1
+                elif key == "KEY_LEFT" and row != 0:
+                    check_col = 0
+                    check_row = -1
+                if key == "q":
+                    break
+            except KeyboardInterrupt:
+                sys.exit()
+
+            col += check_col
+            row += check_row
+            if col == food_hieght and row == food_width:
+                food_hieght = random.randint(1, height -2)
+                food_width = random.randint(2, width - 2)
+                stdscr.addstr(food_hieght, food_width, food)
+                stdscr.addstr(col, row, character)
+               
+            if col + 1 == height or col == 0 or row+1 == width - 1 or row == 0:
+                sys.exit()
+            stdscr.addstr(food_hieght, food_width, food)
+            stdscr.addstr(col, row, character)
+    
+            stdscr.refresh()
+            time.sleep(0.1)
+  
+snake = Snake()
+curses.wrapper(snake.control_snake)
